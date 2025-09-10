@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Universal Unit Converter • Fast, Free, Multilingual</title>
+  <meta name="description" content="Convert length, weight, temperature, volume, speed, area, time, data, pressure quickly. Auto language translation supported." />
+  <meta property="og:title" content="Universal Unit Converter" />
+  <meta property="og:description" content="Fast, free unit converter with auto-translate." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <style>
+    :root { --bg: #0b1220; --card:#0f172a; --muted:#94a3b8; --text:#e2e8f0; --accent:#38bdf8; --ring:#22d3ee; --ok:#22c55e; }
+    * { box-sizing: border-box }
+    body { margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial; background:linear-gradient(180deg,#0a0f1c,#0b1220); color:var(--text); }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    header { display:flex; align-items:center; gap:16px; justify-content:space-between; }
+    .brand { display:flex; align-items:center; gap:10px; }
+    .logo { width:36px; height:36px; border-radius:10px; background:radial-gradient(circle at 30% 30%, var(--accent), transparent 60%), radial-gradient(circle at 70% 70%, var(--ring), transparent 60%), #111827; box-shadow: 0 6px 24px rgba(34,211,238,.25) inset, 0 4px 18px rgba(56,189,248,.2); }
+    .title { font-weight:700; letter-spacing:.3px }
+    .card { background:linear-gradient(180deg,#0f172a,#0b1220); border:1px solid rgba(148,163,184,.15); border-radius:16px; padding:18px; box-shadow: 0 10px 30px rgba(2,6,23,.4), inset 0 1px 0 rgba(148,163,184,.06); }
+    .row { display:grid; grid-template-columns: repeat(12, 1fr); gap:12px; }
+    .col-12{grid-column: span 12}
+    .col-6{grid-column: span 6}
+    .col-3{grid-column: span 3}
+    @media (max-width: 900px){ .col-6,.col-4,.col-3{grid-column: span 12} }
+    select,input { width:100%; background:#0b1220; color:var(--text); border:1px solid rgba(148,163,184,.25); border-radius:12px; padding:12px 14px; outline:none; font-size:16px; }
+    select:focus,input:focus { border-color:var(--ring); box-shadow:0 0 0 4px rgba(34,211,238,.12) }
+    label { font-size:12px; color:var(--muted); display:block; margin-bottom:6px }
+    .muted { color:var(--muted) }
+    .big { font-size: clamp(20px, 5vw, 38px); font-weight:800; line-height:1.1; }
+    .btn { background:linear-gradient(180deg,#22d3ee,#0891b2); border:none; color:#001018; padding:12px 16px; border-radius:12px; font-weight:700; cursor:pointer }
+    .btn:active { transform: translateY(1px) }
+    .flex { display:flex; gap:10px; align-items:center }
+    .space { height:12px }
+    .ads { background:#0b1220; border:1px dashed rgba(148,163,184,.35); border-radius:12px; padding:10px; text-align:center; color:#94a3b8 }
+    .table { width:100%; border-collapse:collapse; }
+    .table th,.table td{ border-bottom:1px solid rgba(148,163,184,.15); padding:10px; text-align:left }
+    .right { text-align:right }
+    footer { margin:30px 0; color:#94a3b8; font-size:12px }
+    .chip { border:1px solid rgba(148,163,184,.3); padding:6px 10px; border-radius:999px; font-size:12px }
+    .chips { display:flex; flex-wrap:wrap; gap:8px }
+    .sticky-footer { position:fixed; left:0; right:0; bottom:0; padding:8px 12px; backdrop-filter: blur(8px); background:rgba(2,6,23,.6); border-top:1px solid rgba(148,163,184,.15) }
+    .gt { transform: scale(.9); transform-origin:right center }
+    .swap { cursor:pointer; user-select:none }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="ad-top" class="ads">Top Banner (Ad Placeholder 728×90 / 320×100)</div>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div class="title">Universal Unit Converter</div>
+          <div class="muted" style="font-size:12px">Fast • Free • Multilingual</div>
+        </div>
+      </div>
+      <div id="google_translate_element" class="gt" aria-label="Auto translate"></div>
+    </header>
+
+    <div class="space"></div>
+
+    <section class="card">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="big">Convert anything, instantly.</h1>
+          <div class="muted">Length, weight, temperature, area, volume, speed, time, data, pressure. Shareable links & Intl formatting.</div>
+        </div>
+        <div class="col-12">
+          <div class="chips" id="categoryChips"></div>
+        </div>
+
+        <div class="col-6">
+          <label>Category</label>
+          <select id="category"></select>
+        </div>
+        <div class="col-3">
+          <label>From</label>
+          <select id="fromUnit"></select>
+        </div>
+        <div class="col-3">
+          <label>To</label>
+          <div class="flex">
+            <select id="toUnit" style="flex:1"></select>
+            <span id="swap" class="chip swap" title="Swap">⇄</span>
+          </div>
+        </div>
+        <div class="col-6">
+          <label>Value</label>
+          <input id="fromValue" type="number" inputmode="decimal" placeholder="Enter value" value="1" />
+        </div>
+        <div class="col-6">
+          <label>Result</label>
+          <input id="toValue" type="text" readonly />
+        </div>
+        <div class="col-12 flex">
+          <button id="copyLink" class="btn">Copy shareable link</button>
+          <span id="copyMsg" class="muted" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+
+    <div class="space"></div>
+
+    <div id="ad-inline" class="ads">Inline Banner (Ad Placeholder 300×250)</div>
+
+    <div class="space"></div>
+
+    <section class="card">
+      <div class="flex" style="justify-content:space-between">
+        <h2 style="margin:0">All units in this category</h2>
+        <span class="muted" id="baseInfo"></span>
+      </div>
+      <div class="space"></div>
+      <table class="table" id="table">
+        <thead>
+          <tr><th>Unit</th><th>Symbol</th><th class="right">Value</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <footer>
+      <p>Tip: The page auto-detects your locale for number formatting. Use the translator above for your language.</p>
+      <p>© <span id="year"></span> Universal Unit Converter — No tracking cookies, just basic analytics if you add them.</p>
+    </footer>
+  </div>
+
+  <div class="sticky-footer">
+    <div class="container">
+      <div id="ad-bottom" class="ads">Sticky Footer (Ad Placeholder 728×60 / 320×50)</div>
+    </div>
+  </div>
+
+  <script>
+  const catalogs = {
+    length: {
+      base: 'm',
+      units: [
+        U('Kilometer','km', 1000),
+        U('Meter','m', 1),
+        U('Centimeter','cm', 0.01),
+        U('Millimeter','mm', 0.001),
+        U('Micrometer','µm', 1e-6),
+        U('Nanometer','nm', 1e-9),
+        U('Mile','mi', 1609.344),
+        U('Yard','yd', 0.9144),
+        U('Foot','ft', 0.3048),
+        U('Inch','in', 0.0254)
+      ]
+    },
+    mass: {
+      base: 'kg',
+      units: [
+        U('Tonne','t', 1000),
+        U('Kilogram','kg', 1),
+        U('Gram','g', 0.001),
+        U('Milligram','mg', 1e-6),
+        U('Microgram','µg', 1e-9),
+        U('Pound','lb', 0.45359237),
+        U('Ounce','oz', 0.028349523125)
+      ]
+    },
+    temperature: {
+      base: 'K',
+      units: [
+        {
+          label:'Celsius', symbol:'°C', toBase:v=>v+273.15, fromBase:v=>v-273.15
+        },
+        {
+          label:'Fahrenheit', symbol:'°F', toBase:v=>(v+459.67)*5/9, fromBase:v=>v*9/5-459.67
+        },
+        {
+          label:'Kelvin', symbol:'K', toBase:v=>v, fromBase:v=>v
+        }
+      ]
+    },
+    area: {
+      base: 'm²',
+      units: [
+        U('Square kilometer','km²', 1e6),
+        U('Square meter','m²', 1),
+        U('Square centimeter','cm²', 1e-4),
+        U('Square millimeter','mm²', 1e-6),
+        U('Hectare','ha', 1e4),
+        U('Acre','ac', 4046.8564224)
+      ]
+    },
+    volume: {
+      base: 'm³',
+      units: [
+        U('Cubic meter','m³', 1),
+        U('Liter','L', 0.001),
+        U('Milliliter','mL', 1e-6),
+        U('Cubic centimeter','cm³', 1e-6),
+        U('Cubic inch','in³', 1.6387064e-5),
+        U('Cubic foot','ft³', 0.028316846592),
+        U('Gallon (US)','gal', 0.003785411784)
+      ]
+    },
+    speed: {
+      base: 'm/s',
+      units: [
+        U('Meter per second','m/s', 1),
+        U('Kilometer per hour','km/h', 1/3.6),
+        U('Mile per hour','mph', 0.44704),
+        U('Knot','kn', 0.514444)
+      ]
+    },
+    time: {
+      base: 's',
+      units: [
+        U('Day','d', 86400),
+        U('Hour','h', 3600),
+        U('Minute','min', 60),
+        U('Second','s', 1),
+        U('Millisecond','ms', 1e-3)
+      ]
+    },
+    data: {
+      base: 'B',
+      units: [
+        U('Bit','b', 1/8),
+        U('Byte','B', 1),
+        U('Kilobyte (KB)','KB', 1024),
+        U('Megabyte (MB)','MB', 1024**2),
+        U('Gigabyte (GB)','GB', 1024**3),
+        U('Terabyte (TB)','TB', 1024**4)
+      ]
+    },
+    pressure: {
+      base: 'Pa',
+      units: [
+        U('Pascal','Pa', 1),
+        U('Kilopascal','kPa', 1000),
+        U('Bar','bar', 100000),
+        U('Atmosphere','atm', 101325),
+        U('Millimeter of mercury','mmHg', 133.32236842105263),
+        U('Pound per square inch','psi', 6894.757293168361)
+      ]
+    }
+  };
+
+  function U(label, symbol, factor){
+    return {
+      label, symbol,
+      toBase: v => v * factor,
+      fromBase: v => v / factor
+    }
+  }
+
+  const nf = new Intl.NumberFormat(undefined, { maximumFractionDigits: 12 });
+
+  const categorySel = document.getElementById('category');
+  const fromSel = document.getElementById('fromUnit');
+  const toSel = document.getElementById('toUnit');
+  const fromVal = document.getElementById('fromValue');
+  const toVal = document.getElementById('toValue');
+  const tableBody = document.querySelector('#table tbody');
+  const baseInfo = document.getElementById('baseInfo');
+  const copyLinkBtn = document.getElementById('copyLink');
+  const copyMsg = document.getElementById('copyMsg');
+  const chips = document.getElementById('categoryChips');
+  const year = document.getElementById('year');
+  year.textContent = new Date().getFullYear();
+
+  const categories = Object.keys(catalogs);
+
+  categories.forEach(key => {
+    const opt = new Option(cap(key), key);
+    categorySel.add(opt);
+
+    const chip = document.createElement('button');
+    chip.className = 'chip'; chip.type = 'button'; chip.textContent = cap(key);
+    chip.addEventListener('click', () => { categorySel.value = key; onCategoryChange(); });
+    chips.appendChild(chip);
+  });
+
+  const params = new URLSearchParams(location.search);
+  const initCategory = params.get('c') || 'length';
+  categorySel.value = categories.includes(initCategory) ? initCategory : 'length';
+
+  function onCategoryChange(){
+    const cat = catalogs[categorySel.value];
+    fromSel.innerHTML = ''; toSel.innerHTML = '';
+    cat.units.forEach((u, i) => {
+      fromSel.add(new Option(`${u.label} (${u.symbol})`, i));
+      toSel.add(new Option(`${u.label} (${u.symbol})`, i));
+    });
+    fromSel.value = Math.min(1, cat.units.length-1);
+    toSel.value = 0;
+    baseInfo.textContent = `Base: ${cat.base}`;
+    renderAll();
+    syncURL();
+  }
+
+  function convert(){
+    const cat = catalogs[categorySel.value];
+    const from = cat.units[+fromSel.value];
+    const to = cat.units[+toSel.value];
+    const v = parseFloat(fromVal.value || '0');
+    if (!isFinite(v)) return 0;
+    const base = from.toBase(v);
+    return to.fromBase(base);
+  }
+
+  function renderAll(){
+    const result = convert();
+    toVal.value = nf.format(result);
+
+    const cat = catalogs[categorySel.value];
+    const from = cat.units[+fromSel.value];
+    const v = parseFloat(fromVal.value || '0');
+    const base = from.toBase(isFinite(v) ? v : 0);
+
+    tableBody.innerHTML = '';
+    cat.units.forEach(u => {
+      const tr = document.createElement('tr');
+      const val = u.fromBase(base);
+      tr.innerHTML = `<td>${u.label}</td><td>${u.symbol}</td><td class="right">${nf.format(val)}</td>`;
+      tableBody.appendChild(tr);
+    });
+  }
+
+  function syncURL(){
+    const catKey = categorySel.value;
+    const cat = catalogs[catKey];
+    const f = cat.units[+fromSel.value]?.symbol || '';
+    const t = cat.units[+toSel.value]?.symbol || '';
+    const v = fromVal.value || '';
+    const s = new URLSearchParams({ c:catKey, f, t, v });
+    const url = location.pathname + '?' + s.toString();
+    history.replaceState(null, '', url);
+  }
+
+  document.getElementById('swap').addEventListener('click', () => {
+    const tmp = fromSel.value; fromSel.value = toSel.value; toSel.value = tmp; renderAll(); syncURL();
+  });
+
+  categorySel.addEventListener('change', onCategoryChange);
+  fromSel.addEventListener('change', ()=>{ renderAll(); syncURL(); });
+  toSel.addEventListener('change', ()=>{ renderAll(); syncURL(); });
+  fromVal.addEventListener('input', ()=>{ renderAll(); syncURL(); });
+
+  copyLinkBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      copyMsg.textContent = 'Link copied!';
+      setTimeout(()=> copyMsg.textContent = '', 1500);
+    } catch(e){
+      copyMsg.textContent = 'Copy failed';
+      setTimeout(()=> copyMsg.textContent = '', 1500);
+    }
+  });
+
+  function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  onCategoryChange();
+
+  (function restoreFromParams(){
+    const c = params.get('c');
+    const f = params.get('f');
+    const t = params.get('t');
+    const v = params.get('v');
+    if (c && catalogs[c]) { categorySel.value = c; onCategoryChange(); }
+    const cat = catalogs[categorySel.value];
+    if (f){ const i = cat.units.findIndex(u=>u.symbol===f); if (i>=0) fromSel.value = i; }
+    if (t){ const j = cat.units.findIndex(u=>u.symbol===t); if (j>=0) toSel.value = j; }
+    if (v){ fromVal.value = v; }
+    renderAll(); syncURL();
+  })();
+  </script>
+
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'ar,de,en,es,fr,hi,id,it,ja,ko,pt,ru,th,tr,vi,zh-CN,zh-TW',
+        autoDisplay: false,
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
