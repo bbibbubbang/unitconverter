@@ -383,6 +383,26 @@
         autoDisplay: false,
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
       }, 'google_translate_element');
+
+      const userLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+      const langMap = {
+        'ar': 'ar', 'de': 'de', 'en': 'en', 'es': 'es', 'fr': 'fr', 'hi': 'hi', 'id': 'id', 'it': 'it',
+        'ja': 'ja', 'ko': 'ko', 'pt': 'pt', 'ru': 'ru', 'th': 'th', 'tr': 'tr', 'vi': 'vi',
+        'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW'
+      };
+      const targetLang = langMap[userLang] || langMap[userLang.split('-')[0]];
+      if (targetLang && targetLang !== 'en') {
+        const applyLang = () => {
+          const combo = document.querySelector('.goog-te-combo');
+          if (combo) {
+            combo.value = targetLang;
+            combo.dispatchEvent(new Event('change'));
+          } else {
+            setTimeout(applyLang, 50);
+          }
+        };
+        applyLang();
+      }
     }
   </script>
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
