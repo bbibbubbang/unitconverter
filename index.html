@@ -3,10 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Universal Unit Converter • Fast, Free, Multilingual</title>
-  <meta name="description" content="Convert length, weight, temperature, volume, speed, area, time, data, pressure quickly. Auto language translation supported." />
+  <title>Universal Unit Converter • All-in-One 단위 변환기</title>
+  <meta name="description" content="Universal Unit Converter에서 길이·무게·온도·부피 등 10가지 이상의 단위를 즉시 변환하세요. 자동 번역, 공유 가능한 링크, 세부 단위표로 업무와 학습에 필요한 정보를 한 번에 제공합니다." />
   <meta property="og:title" content="Universal Unit Converter" />
-  <meta property="og:description" content="Fast, free unit converter with auto-translate." />
+  <meta property="og:description" content="길이·무게·온도·부피 등 다양한 단위를 즉시 변환하고, 자동 번역과 공유 링크까지 제공하는 무료 웹 도구." />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Universal Unit Converter" />
+  <meta name="twitter:description" content="길이·무게·온도·부피 등 다양한 단위를 즉시 변환하고, 자동 번역과 공유 링크까지 제공하는 무료 웹 도구." />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#0ea5e9" />
   <meta name="google-adsense-account" content="ca-pub-1142089868889766" />
@@ -39,6 +42,8 @@
     .table th,.table td{ border-bottom:1px solid rgba(148,163,184,.15); padding:10px; text-align:left }
     .right { text-align:right }
     footer { margin:30px 0; color:#94a3b8; font-size:12px }
+    .card ul { margin:0; padding-left:20px; color:var(--muted); line-height:1.6 }
+    .card ul li strong { color:var(--text) }
     .chip { border:1px solid rgba(148,163,184,.3); padding:6px 10px; border-radius:999px; font-size:12px }
     .chips { display:flex; flex-wrap:wrap; gap:8px }
     .sticky-footer { position:fixed; left:0; right:0; bottom:0; padding:8px 12px; backdrop-filter: blur(8px); background:rgba(2,6,23,.6); border-top:1px solid rgba(148,163,184,.15) }
@@ -103,6 +108,19 @@
           <span id="copyMsg" class="muted" aria-live="polite"></span>
         </div>
       </div>
+    </section>
+
+    <div class="space"></div>
+
+    <section class="card" aria-labelledby="about-title">
+      <h2 id="about-title" style="margin-top:0">Universal Unit Converter 소개</h2>
+      <p class="muted">전 세계 어디서든 필요한 단위를 정확히 계산할 수 있도록 설계된 올인원 변환 플랫폼입니다. 검색 미리보기에서도 확인할 수 있듯이, 누구나 빠르게 이해하고 활용할 수 있는 핵심 기능을 제공합니다.</p>
+      <ul>
+        <li><strong>즉시 계산</strong> — 길이, 무게, 온도, 부피, 속도, 면적, 시간, 데이터, 압력 등 다양한 단위를 한 번에 변환합니다.</li>
+        <li><strong>다국어 지원</strong> — Google 번역 위젯과 자동 숫자 서식을 통해 각국 사용자에게 친숙한 화면을 제공합니다.</li>
+        <li><strong>공유 친화적</strong> — 변환 결과를 복사해 공유하거나, 링크 생성 기능으로 다른 사람에게 정확한 값을 전달하세요.</li>
+        <li><strong>신뢰성 있는 정보</strong> — 각 카테고리의 기본 단위와 세부 단위표를 함께 제공하여 학습과 업무에 바로 활용할 수 있습니다.</li>
+      </ul>
     </section>
 
     <div class="space"></div>
